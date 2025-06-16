@@ -10,11 +10,12 @@ import {
   Route 
 } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
+import PlayerBar from './components/player/PlayerBar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Library from './pages/Library';
 import Album from './pages/Album';
-import PlayerBar from './components/player/PlayerBar';
+
 
 // Tạo theme Material-UI
 const theme = createTheme({
