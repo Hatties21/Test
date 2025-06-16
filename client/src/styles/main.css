@@ -1,0 +1,19 @@
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  background: #333;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header a {
+  color: white;
+  text-decoration: none;
+}

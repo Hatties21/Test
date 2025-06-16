@@ -1,0 +1,29 @@
+/* Import font từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap');
+
+/* Khai báo biến CSS */
+:root {
+  --font-rounded: 'Varela Round', 'M PLUS Rounded 1c', sans-serif;
+  --font-main: 'M PLUS Rounded 1c', sans-serif;
+  --font-weight-bold: 700;
+  --font-weight-medium: 500;
+  --font-weight-regular: 400;
+}
+
+/* Class font tùy chỉnh */
+.font-rounded {
+  font-family: var(--font-rounded);
+  letter-spacing: 0.03em;
+}
+
+.font-main {
+  font-family: var(--font-main);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
