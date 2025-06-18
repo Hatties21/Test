@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Library from './pages/Library';
 import Login from './pages/Login';
+import Album from './pages/Album';
 
 const MainRoutes = () => {
   return (

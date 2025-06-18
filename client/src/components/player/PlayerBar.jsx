@@ -10,12 +10,14 @@ import prevIcon from '../../assets/player-icons/prev.png';
 import nextIcon from '../../assets/player-icons/next.png';
 import shuffleIcon from '../../assets/player-icons/shuffle.png';
 import loopIcon from '../../assets/player-icons/loop.png';
+import loop1Icon from '../../assets/player-icons/loop1.png';
 import volumeIcon from '../../assets/player-icons/volume.png';
 import heartIcon from '../../assets/player-icons/heart.png';
 import playlistIcon from '../../assets/player-icons/playlist.png';
 
 const PlayerBar = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
   const [currentSong,] = useState({
     title: "Blinding Lights",
     artist: "The Weeknd",
@@ -53,8 +55,11 @@ const PlayerBar = () => {
         <button className="control-btn">
           <img src={nextIcon} alt="Next" />
         </button>
-        <button className="control-btn">
-          <img src={loopIcon} alt="Loop" />
+        <button 
+          className="control-btn" 
+          onClick={() => setIsLooping(!isLooping)}
+        >
+          <img src={isLooping ? loop1Icon : loopIcon} alt="Loop/Loop1" />
         </button>
       </Box>
 
