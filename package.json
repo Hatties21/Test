@@ -10,7 +10,6 @@
     "type": "git",
     "url": "git+https://github.com/Hatties21/Test.git"
   },
-  
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,6 +20,9 @@
   "description": "",
   "devDependencies": {
     "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "mongoose": "^8.16.0"
   }
-  
 }
