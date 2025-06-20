@@ -1,13 +1,14 @@
 import React from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import Navbar from './components/layout/Navbar';
 import PlayerBar from './components/player/PlayerBar';
 import Home from './pages/Home';
-import Login from './pages/Login';
 import Library from './pages/Library';
 import Album from './pages/Album';
-import Register from './pages/Register';
+import Song from './pages/Song';
 
 // Tạo theme Material-UI
 const theme = createTheme({
@@ -29,9 +30,10 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/library" element={<Library />} />
         <Route path="/album" element={<Album />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/song/:id" element={<Song />} />
       </Routes>
       {!hidePlayerBar && <PlayerBar />}
     </>
