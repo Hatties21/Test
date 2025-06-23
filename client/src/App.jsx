@@ -8,7 +8,6 @@ import PlayerBar from './components/player/PlayerBar';
 import Home from './pages/Home';
 import Library from './pages/Library';
 import Album from './pages/Album';
-import Song from './pages/Song';
 
 // Tạo theme Material-UI
 const theme = createTheme({
@@ -33,7 +32,6 @@ const AppContent = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/library" element={<Library />} />
         <Route path="/album" element={<Album />} />
-        <Route path="/song/:id" element={<Song />} />
       </Routes>
       {!hidePlayerBar && <PlayerBar />}
     </>

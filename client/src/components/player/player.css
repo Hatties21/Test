@@ -83,3 +83,46 @@
   height: 16px;
   filter: invert(1);
 }
+
+/* Thanh tiến trình nằm trên, cùng chiều rộng với player bar */
+.progress-wrapper {
+  position: fixed;
+  bottom: 80px; /* đúng bằng chiều cao player bar */
+  width: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  padding: 4px 0 0;
+}
+
+.progress-time {
+  font-size: 14px !important;      
+  font-weight: 600 !important;     
+  color: #222 !important;
+  transform: translateX(20px);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  appearance: none;
+  background: #ccc;
+  outline: none;
+  cursor: pointer;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #1976d2;
+  cursor: pointer;
+  border: none;
+  margin-top: -4px;
+}
+
