@@ -1,4 +1,5 @@
-import React from 'react';
+// ✅ Updated App.jsx
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Login from './pages/Login';
@@ -8,6 +9,7 @@ import PlayerBar from './components/player/PlayerBar';
 import Home from './pages/Home';
 import Library from './pages/Library';
 import Album from './pages/Album';
+import Profile from './pages/Profile';
 
 // Tạo theme Material-UI
 const theme = createTheme({
@@ -23,15 +25,28 @@ const AppContent = () => {
   const location = useLocation();
   const hidePlayerBar = location.pathname === '/login';
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('userInfo');
+    if (storedUser) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
     <>
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} user={user} setIsLoggedIn={setIsLoggedIn} setUser={setUser} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/library" element={<Library />} />
         <Route path="/album" element={<Album />} />
+        <Route path="/profile" element={<Profile />} />
+        {/* Thêm các route khác nếu cần */}
       </Routes>
       {!hidePlayerBar && <PlayerBar />}
     </>

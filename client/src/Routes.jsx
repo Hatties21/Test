@@ -13,6 +13,7 @@ const MainRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/album" element={<Album />} />
       <Route path="/register" element={<Register />} />
+      {/* Thêm các route khác nếu cần */}
 
     </Routes>
   );

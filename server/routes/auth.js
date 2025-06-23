@@ -9,7 +9,11 @@ const router = express.Router();
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { name,email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Thiếu thông tin đăng ký' });
+    }
 
     // Kiểm tra email đã tồn tại
     if (await User.findOne({ email })) {
@@ -21,7 +25,7 @@ router.post('/register', async (req, res) => {
     const hashed = await _hash(password, salt);
 
     // Tạo user mới
-    const newUser = await User.create({ email, password: hashed });
+    const newUser = await User.create({ name,email, password: hashed });
     return res.status(201).json({ message: 'Đăng ký thành công', userId: newUser._id });
   } catch (err) {
     console.error('❌ Register error:', err);
@@ -55,7 +59,8 @@ router.post('/login', async (req, res) => {
 
     // Trả về thông tin user (không gởi password) và token
     const { password: pwd, ...info } = user._doc;
-    return res.status(200).json({ ...info, token });
+    return res.status(200).json({ ...info, token }); // info = { _id, email, name }
+
   } catch (err) {
     console.error('❌ Login error:', err);
     return res.status(500).json({ message: 'Lỗi server' });
