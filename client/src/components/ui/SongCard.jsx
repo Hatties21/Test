@@ -6,7 +6,7 @@ const SongCard = ({ song, onClick }) => {
     <Box sx={{ textAlign: 'center', cursor: onClick ? 'pointer' : 'default' }} onClick={onClick}>
       <Box
         component="img"
-        src={song.image}
+        src={song.imageUrl}
         alt={song.title}
         sx={{
           width: 180,

@@ -17,7 +17,7 @@ import playlistIcon from "../../assets/player-icons/playlist.png";
 const PlayerBar = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
-  const [currentTime, setCurrentTime] = useState(25); // ví dụ: 25 giây
+  const [currentTime, setCurrentTime] = useState(0); // bắt đầu từ 0 giây
   const [duration, setDuration] = useState(202); // ví dụ: 3:22
 
   const currentSong = {

@@ -1,18 +1,40 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import { Box, Typography, Card, CardMedia, CardContent } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SongCard from "../components/ui/SongCard"; // hoặc đường dẫn tương ứng
+import AddSongButton from "../components/ui/AddSongButton";
 
 const Home = () => {
   const [songs, setSongs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const timerRef = useRef(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchSongs = async (pageNum = 1) => {
+    try {
+      const res = await axios.get(`/api/songs?page=${pageNum}&limit=25`);
+      setSongs(res.data.songs);
+      setPage(res.data.currentPage);
+      setTotalPages(res.data.totalPages);
+    } catch (err) {
+      console.error("Lỗi khi lấy bài hát:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Tạm thời để sẵn sàng gọi API sau này
   useEffect(() => {
-    // fetchSongs(); // Bạn có thể gọi API ở đây sau
+    fetchSongs(); // Bạn có thể gọi API ở đây sau
   }, []);
+
+  const handleSongAdded = (newSong) => {
+    setSongs((prev) => [newSong, ...prev]); // Cập nhật real-time
+  };
 
   const handleMainCardClick = () => {
     if (songs[currentIndex]) {
@@ -82,7 +104,7 @@ const Home = () => {
           >
             <CardMedia
               component="img"
-              image={songs[leftIndex]?.image}
+              image={songs[leftIndex]?.imageUrl}
               alt={songs[leftIndex]?.title}
               sx={{ height: "100%", width: "100%", objectFit: "cover" }}
             />
@@ -121,7 +143,7 @@ const Home = () => {
           >
             <CardMedia
               component="img"
-              image={songs[currentIndex]?.image}
+              image={songs[currentIndex]?.imageUrl}
               alt={songs[currentIndex]?.title}
               sx={{ height: "100%", width: "100%", objectFit: "cover" }}
             />
@@ -164,7 +186,7 @@ const Home = () => {
           >
             <CardMedia
               component="img"
-              image={songs[rightIndex]?.image}
+              image={songs[rightIndex]?.imageUrl}
               alt={songs[rightIndex]?.title}
               sx={{ height: "100%", width: "100%", objectFit: "cover" }}
             />
@@ -204,7 +226,7 @@ const Home = () => {
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(5, 180px)",
-            gap: 3,
+            gap: 8,
             justifyContent: "center",
           }}
         >
@@ -212,11 +234,14 @@ const Home = () => {
             <SongCard
               key={song.id}
               song={song}
-              onClick={() => navigate(`/song/${song.id}`)}
+              onClick={() => navigate(`/song/${song._id}`)}
             />
           ))}
         </Box>
       </Box>
+      <AddSongButton onSongAdded={handleSongAdded} />
+
+      <Box sx={{ height: '180px' }} />
     </Box>
   );
 };

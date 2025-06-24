@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Library from './pages/Library';
 import Album from './pages/Album';
 import Profile from './pages/Profile';
+import SongDetail from './pages/SongDetail'; // thêm dòng này
 
 // Tạo theme Material-UI
 const theme = createTheme({
@@ -46,6 +47,7 @@ const AppContent = () => {
         <Route path="/library" element={<Library />} />
         <Route path="/album" element={<Album />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/song/:id" element={<SongDetail />} />
         {/* Thêm các route khác nếu cần */}
       </Routes>
       {!hidePlayerBar && <PlayerBar />}

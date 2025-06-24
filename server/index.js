@@ -6,12 +6,15 @@ import express from 'express';
 import cors from 'cors';
 import { connect } from 'mongoose';
 import authRoutes from './routes/auth.js';  // nhớ thêm .js ở cuối
+import songRoutes from './routes/song.js';
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/api/songs', songRoutes);
+app.use('/uploads', express.static('uploads'));
 
 // Kết nối MongoDB
 connect(process.env.MONGO_URI, {
