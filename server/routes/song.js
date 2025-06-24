@@ -21,18 +21,14 @@ if (!fs.existsSync(AUDIO_DIR)) fs.mkdirSync(AUDIO_DIR, { recursive: true });
 // Multer setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    if (file.fieldname === 'image') {
-      cb(null, IMAGE_DIR);
-    } else if (file.fieldname === 'audio') {
-      cb(null, AUDIO_DIR);
-    } else {
-      cb(new Error('Invalid file field'), null);
-    }
+    const isImage = file.mimetype.startsWith("image/");
+    cb(null, isImage ? IMAGE_DIR : AUDIO_DIR);
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    const base = path.basename(file.originalname, ext);
-    cb(null, `${base}-${Date.now()}${ext}`);
+    const title = (req.body.title || "untitled").replace(/[^a-zA-Z0-9_-]/g, "_"); // sạch tên bài
+    const name = `${title}${ext}`;
+    cb(null, name);
   }
 });
 
@@ -47,6 +43,9 @@ router.post('/', upload.fields([
     const { title, artist, type, username, description } = req.body;
     const image = req.files.image?.[0];
     const audio = req.files.audio?.[0];
+
+    const imageUrl = `/uploads/images/${image.filename}`;
+    const audioUrl = `/uploads/audios/${audio.filename}`;
 
     if (!title || !artist || !type || !username || !image || !audio) {
       return res.status(400).json({ message: 'Thiếu thông tin yêu cầu' });
@@ -63,8 +62,8 @@ router.post('/', upload.fields([
       type,
       description: description || "",
       createdAt: new Date(),
-      imageUrl: `/uploads/images/${image.filename}`,
-      audioUrl: `/uploads/audios/${audio.filename}`,
+      imageUrl,
+      audioUrl,
       duration,
     });
 

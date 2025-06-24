@@ -2,17 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Box, Typography, Card, CardMedia, CardContent } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import SongCard from "../components/ui/SongCard"; // hoặc đường dẫn tương ứng
+import SongCard from "../components/ui/SongCard";
 import AddSongButton from "../components/ui/AddSongButton";
 
-const Home = () => {
+const Home = ({ setCurrentSong }) => {
   const [songs, setSongs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const timerRef = useRef(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
+  const timerRef = useRef(null);
 
   const fetchSongs = async (pageNum = 1) => {
     try {
@@ -27,31 +27,26 @@ const Home = () => {
     }
   };
 
-  // Tạm thời để sẵn sàng gọi API sau này
   useEffect(() => {
-    fetchSongs(); // Bạn có thể gọi API ở đây sau
+    fetchSongs();
   }, []);
 
   const handleSongAdded = (newSong) => {
-    setSongs((prev) => [newSong, ...prev]); // Cập nhật real-time
+    setSongs((prev) => [newSong, ...prev]);
   };
 
   const handleMainCardClick = () => {
     if (songs[currentIndex]) {
-      navigate(`/song/${songs[currentIndex].id}`);
+      setCurrentSong(songs[currentIndex]);               // ✅ Cập nhật player
+      navigate(`/song/${songs[currentIndex]._id}`);      // ✅ Điều hướng nếu cần
     }
   };
 
   const handleSubCardClick = (direction) => {
+    const total = songs.length;
     setCurrentIndex((prev) => {
-      const total = songs.length;
-      if (!total) return prev;
-      if (direction === "left") {
-        return (prev - 1 + total) % total;
-      }
-      if (direction === "right") {
-        return (prev + 1) % total;
-      }
+      if (direction === "left") return (prev - 1 + total) % total;
+      if (direction === "right") return (prev + 1) % total;
       return prev;
     });
   };
@@ -69,7 +64,7 @@ const Home = () => {
         width: "100%",
       }}
     >
-      {/* Slider Section (ẩn nếu chưa đủ 3 bài) */}
+      {/* Slider Section */}
       {songs.length >= 0 && (
         <Box
           sx={{
@@ -84,7 +79,6 @@ const Home = () => {
         >
           {/* Sub Left */}
           <Card
-            component="div"
             onClick={() => handleSubCardClick("left")}
             sx={{
               width: "800px",
@@ -96,10 +90,7 @@ const Home = () => {
               position: "relative",
               right: "-50px",
               transition: "all 0.3s ease",
-              "&:hover": {
-                opacity: 0.8,
-                transform: "translateX(60px)",
-              },
+              "&:hover": { opacity: 0.8, transform: "translateX(60px)" },
             }}
           >
             <CardMedia
@@ -118,15 +109,12 @@ const Home = () => {
               }}
             >
               <Typography variant="h5">{songs[leftIndex]?.title}</Typography>
-              <Typography variant="body1">
-                {songs[leftIndex]?.artist}
-              </Typography>
+              <Typography variant="body1">{songs[leftIndex]?.artist}</Typography>
             </CardContent>
           </Card>
 
           {/* Main Card */}
           <Card
-            component="div"
             onClick={handleMainCardClick}
             sx={{
               width: "1800px",
@@ -136,9 +124,7 @@ const Home = () => {
               margin: "0 -50px",
               position: "relative",
               transition: "all 0.3s ease",
-              "&:hover": {
-                transform: "scale(1.01)",
-              },
+              "&:hover": { transform: "scale(1.01)" },
             }}
           >
             <CardMedia
@@ -166,7 +152,6 @@ const Home = () => {
 
           {/* Sub Right */}
           <Card
-            component="div"
             onClick={() => handleSubCardClick("right")}
             sx={{
               width: "800px",
@@ -178,10 +163,7 @@ const Home = () => {
               position: "relative",
               left: "-50px",
               transition: "all 0.3s ease",
-              "&:hover": {
-                opacity: 0.8,
-                transform: "translateX(-60px)",
-              },
+              "&:hover": { opacity: 0.8, transform: "translateX(-60px)" },
             }}
           >
             <CardMedia
@@ -200,15 +182,13 @@ const Home = () => {
               }}
             >
               <Typography variant="h5">{songs[rightIndex]?.title}</Typography>
-              <Typography variant="body1">
-                {songs[rightIndex]?.artist}
-              </Typography>
+              <Typography variant="body1">{songs[rightIndex]?.artist}</Typography>
             </CardContent>
           </Card>
         </Box>
       )}
 
-      {/* Danh sách bài hát (chuẩn bị kết nối từ DB) */}
+      {/* Danh sách bài hát */}
       <Box sx={{ width: "100%", padding: "20px 40px" }}>
         <Typography
           variant="h4"
@@ -232,16 +212,19 @@ const Home = () => {
         >
           {songs.map((song) => (
             <SongCard
-              key={song.id}
+              key={song._id}
               song={song}
-              onClick={() => navigate(`/song/${song._id}`)}
+              onClick={() => {
+                setCurrentSong(song); // ✅ cập nhật bài đang phát
+                navigate(`/song/${song._id}`); // hoặc bỏ nếu chỉ muốn phát
+              }}
             />
           ))}
         </Box>
       </Box>
-      <AddSongButton onSongAdded={handleSongAdded} />
 
-      <Box sx={{ height: '180px' }} />
+      <AddSongButton onSongAdded={handleSongAdded} />
+      <Box sx={{ height: "180px" }} /> {/* chừa chỗ cho PlayerBar */}
     </Box>
   );
 };
