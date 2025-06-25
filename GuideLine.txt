@@ -1,0 +1,47 @@
+Bước 1: Đăng nhập vào Ubuntu VM (qua console nếu bạn dùng VirtualBox/VMware, hoặc SSH nếu bạn đã mở SSH).
+sudo apt update
+sudo apt upgrade -y
+
+Bước 2: 
+# Cài Git và Subversion
+sudo apt install -y git subversion
+sudo apt update
+sudo apt install -y curl
+curl --version
+# Cài Node.js (phiên bản LTS) và npm
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+
+sudo apt install -y nodejs
+#Kiểm tra: 
+git --version
+svn --version
+node -v
+npm -v
+
+Bước 3: Cài đặt và cấu hình SSH để truy cập từ xa
+sudo apt install -y openssh-server
+ssh-keygen -t ed25519       # nếu bạn chưa có key
+
+NAT: VM nằm sau NAT, không có IP LAN trực tiếp. Nếu muốn SSH từ host, bạn phải cấu hình Port Forwarding:
+Trong VirtualBox → Settings của VM → Network → Adapter (NAT) → Advanced → Port Forwarding.
+Thêm rule: 
+Name: SSH
+Protocol: TCP
+Host IP: (để trống hoặc 127.0.0.1)
+Host Port: 2222
+Guest IP: (để trống hoặc IP nội bộ guest, thường không cần)
+Guest Port: 22
+
+sudo systemctl status ssh.service
+sudo journalctl -xeu ssh.service
+sudo systemctl restart ssh
+sudo systemctl status ssh
+sudo nano /etc/ssh/sshd_config ( trong đấy thêm hoặc sửa #AllowUser deploy) Lưu và đóng nano: nhấn Ctrl+O → Enter, rồi Ctrl+X.
+
+sudo sshd -t
+sudo systemctl restart ssh
+sudo systemctl status ssh
+
+trên máy chính (ko phải máy ảo)
+ssh -p 2222 deploy@localhost    # thay IP_VM bằng địa chỉ IP máy ảo  ( dùng lệnh ip addr show để xem ip (vd: 192.168.56.101/24 : Số trước /24 chính là IP của bạn))
+(thay deploy = tên tài khoản trong ubuntu)
