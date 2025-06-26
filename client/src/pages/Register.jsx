@@ -30,20 +30,22 @@ const Register = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:5000/api/auth/register", {
-        name,
-        email,
-        password,
-      });
-      alert("Đăng ký thành công!");
-      navigate("/login");
-    } catch (err) {
-      alert(err.response?.data?.error || "Đăng ký thất bại!");
-    }
-  };
+  // File: client/src/pages/Register.jsx
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    await axios.post("/api/auth/register", {
+      name,
+      email,
+      password,
+    });
+    alert("Đăng ký thành công!");
+    navigate("/login");
+  } catch (err) {
+    alert(err.response?.data?.error || "Đăng ký thất bại!");
+  }
+};
+
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8, mb: 8 }}>
