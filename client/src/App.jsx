@@ -28,7 +28,7 @@ const theme = createTheme({
 // ✅ Tách AppContent để dùng useLocation
 const AppContent = () => {
   const location = useLocation();
-  const hidePlayerBar = location.pathname === "/login";
+  const hidePlayerBar = location.pathname === "/login" || location.pathname === "/register";
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
