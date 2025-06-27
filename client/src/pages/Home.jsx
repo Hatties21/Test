@@ -224,7 +224,7 @@ const Home = ({ setCurrentSong }) => {
       </Box>
 
       <AddSongButton onSongAdded={handleSongAdded} />
-      <Box sx={{ height: "180px" }} /> {/* chừa chỗ cho PlayerBar */}
+      <Box sx={{ height: "50px" }} /> {/* chừa chỗ cho PlayerBar */}
     </Box>
   );
 };
