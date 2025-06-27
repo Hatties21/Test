@@ -28,6 +28,11 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
   const [likedSongs, setLikedSongs] = useState([]);
   const [isPlaylistMode, setIsPlaylistMode] = useState(false);
   const [showPlaylist, setShowPlaylist] = useState(false);
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [shuffledPlaylist, setShuffledPlaylist] = useState([]);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   useEffect(() => {
     if (!currentSong || !audioRef.current) return;
@@ -36,7 +41,7 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
 
     audio.pause();
     audio.currentTime = 0;
-    audio.load(); // ⚠️ ép reload
+    audio.load();
     audio.play().catch(console.error);
 
     setIsPlaying(true);
@@ -45,14 +50,29 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
   }, [currentSong]);
 
   useEffect(() => {
+    if (currentSong && likedSongs.length > 0) {
+      const isInPlaylist = likedSongs.some((s) => s._id === currentSong._id);
+      setIsPlaylistMode(isInPlaylist);
+    }
+  }, [currentSong, likedSongs]);
+
+  useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const onEnded = () => {
       if (isPlaylistMode && likedSongs.length > 0) {
-        const index = likedSongs.findIndex((s) => s._id === currentSong._id);
-        const next = (index + 1) % likedSongs.length;
-        setCurrentSong(likedSongs[next]);
+        if (loopMode === 1) {
+          handleNext();
+        } else if (loopMode === 0) {
+          const currentList = isShuffled ? shuffledPlaylist : likedSongs;
+          const index = currentList.findIndex((s) => s._id === currentSong._id);
+          if (index === currentList.length - 1) {
+            setIsPlaying(false);
+          } else {
+            handleNext();
+          }
+        }
       }
     };
 
@@ -68,7 +88,14 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
       audio.removeEventListener("loadedmetadata", loaded);
       audio.removeEventListener("ended", onEnded);
     };
-  }, [currentSong, likedSongs, isPlaylistMode]);
+  }, [
+    currentSong,
+    likedSongs,
+    isPlaylistMode,
+    loopMode,
+    isShuffled,
+    shuffledPlaylist,
+  ]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -85,6 +112,23 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
     isPlaying ? audio.play().catch(console.error) : audio.pause();
   }, [isPlaying, loopMode]);
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : volume;
+    }
+  }, [volume, isMuted]);
+
+  useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (showVolumeSlider && !e.target.closest('.volume-control')) {
+      setShowVolumeSlider(false);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => document.removeEventListener('mousedown', handleClickOutside);
+}, [showVolumeSlider]);
+
   const handleSeek = (e) => {
     const time = Number(e.target.value);
     audioRef.current.currentTime = time;
@@ -95,20 +139,86 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
     setLoopMode((prev) => (prev + 1) % 3);
   };
 
+  const toggleShuffle = () => {
+    if (!isShuffled && likedSongs.length > 0) {
+      // Tạo bản sao của playlist và xáo trộn
+      const shuffled = [...likedSongs]
+        .filter((song) => song._id !== currentSong._id)
+        .sort(() => Math.random() - 0.5);
+      setShuffledPlaylist([currentSong, ...shuffled]);
+    }
+    setIsShuffled(!isShuffled);
+  };
+
+  const handleNext = () => {
+    if (!isPlaylistMode || likedSongs.length === 0) return;
+
+    const currentList = isShuffled ? shuffledPlaylist : likedSongs;
+    const currentIndex = currentList.findIndex(
+      (s) => s._id === currentSong._id
+    );
+
+    if (currentIndex === -1) return;
+
+    const nextIndex = (currentIndex + 1) % currentList.length;
+    setCurrentSong(currentList[nextIndex]);
+  };
+
+  const handlePrev = () => {
+    if (!isPlaylistMode || likedSongs.length === 0) return;
+
+    const currentList = isShuffled ? shuffledPlaylist : likedSongs;
+    const currentIndex = currentList.findIndex(
+      (s) => s._id === currentSong._id
+    );
+
+    if (currentIndex === -1) return;
+
+    let prevIndex = currentIndex - 1;
+    if (prevIndex < 0) prevIndex = currentList.length - 1;
+
+    setCurrentSong(currentList[prevIndex]);
+  };
+
   const toggleLike = () => {
     const next = !isLiked;
     setIsLiked(next);
     if (next) {
       setLikedSongs((prev) => {
         if (!prev.find((s) => s._id === currentSong._id)) {
+          // Tự động bật playlist mode khi thêm bài hát đầu tiên
+          if (prev.length === 0) {
+            setIsPlaylistMode(true);
+          }
           return [currentSong, ...prev];
         }
         return prev;
       });
     } else {
-      setLikedSongs((prev) => prev.filter((s) => s._id !== currentSong._id));
+      setLikedSongs((prev) => {
+        const newPlaylist = prev.filter((s) => s._id !== currentSong._id);
+        // Tự động tắt playlist mode khi không còn bài hát nào
+        if (newPlaylist.length === 0) {
+          setIsPlaylistMode(false);
+        }
+        return newPlaylist;
+      });
     }
   };
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    setIsMuted(newVolume === 0);
+  };
+
+  const toggleMute = () => {
+  setIsMuted(!isMuted);
+  // Mở slider khi click vào nút volume nếu đang đóng
+  if (!showVolumeSlider) {
+    setShowVolumeSlider(true);
+  }
+};
 
   const loopIconToShow =
     loopMode === 0 ? slashIcon : loopMode === 1 ? loopIcon : loop1Icon;
@@ -155,16 +265,19 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
         </Box>
 
         <Box className="player-center">
-          <button className="control-btn">
+          <button
+            className={`control-btn ${isShuffled ? "active" : ""}`}
+            onClick={toggleShuffle}
+          >
             <img src={shuffleIcon} alt="Shuffle" />
           </button>
-          <button className="control-btn">
+          <button className="control-btn" onClick={handlePrev}>
             <img src={prevIcon} alt="Previous" />
           </button>
           <button className="play-btn" onClick={() => setIsPlaying(!isPlaying)}>
             <img src={isPlaying ? pauseIcon : playIcon} alt="Play/Pause" />
           </button>
-          <button className="control-btn">
+          <button className="control-btn" onClick={handleNext}>
             <img src={nextIcon} alt="Next" />
           </button>
           <button className="control-btn" onClick={toggleLoopMode}>
@@ -173,11 +286,30 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
         </Box>
 
         <Box className="player-right">
+          <Box className="volume-control">
+            <button
+              className="control-btn"
+              onClick={() => setShowVolumeSlider(!showVolumeSlider)}
+            >
+              <img src={isMuted ? slashIcon : volumeIcon} alt="Volume" />
+            </button>
+            {showVolumeSlider && (
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={isMuted ? 0 : volume}
+                onChange={handleVolumeChange}
+                className="volume-slider"
+              />
+            )}
+          </Box>
           <button className="control-btn" onClick={toggleLike}>
             <img src={isLiked ? heartedIcon : heartIcon} alt="Like" />
           </button>
           <button
-            className="control-btn"
+            className={`control-btn ${isPlaylistMode ? "active" : ""}`}
             onClick={() => setShowPlaylist(!showPlaylist)}
           >
             <img src={playlistIcon} alt="Playlist" />
@@ -198,7 +330,9 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
             likedSongs.map((song) => (
               <Box
                 key={song._id}
-                className="playlist-item"
+                className={`playlist-item ${
+                  currentSong._id === song._id ? "active" : ""
+                }`}
                 onClick={() => {
                   setCurrentSong(song);
                   setIsPlaylistMode(true);

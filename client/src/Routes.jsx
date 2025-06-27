@@ -4,6 +4,7 @@ import Library from './pages/Library';
 import Login from './pages/Login';
 import Album from './pages/Album';
 import Register from './pages/Register';
+import SongDetail from './pages/SongDetail';
 
 const MainRoutes = () => {
   return (
@@ -13,6 +14,7 @@ const MainRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/album" element={<Album />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/song/:id" element={<SongDetail />} />
       {/* Thêm các route khác nếu cần */}
 
     </Routes>

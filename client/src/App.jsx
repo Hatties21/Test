@@ -28,7 +28,8 @@ const theme = createTheme({
 // ✅ Tách AppContent để dùng useLocation
 const AppContent = () => {
   const location = useLocation();
-  const hidePlayerBar = location.pathname === "/login" || location.pathname === "/register";
+  const hidePlayerBar =
+    location.pathname === "/login" || location.pathname === "/register";
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -73,7 +74,16 @@ const AppContent = () => {
         <Route path="/library" element={<Library />} />
         <Route path="/album" element={<Album />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/song/:id" element={<SongDetail />} />
+        <Route
+          path="/song/:id"
+          element={
+            <SongDetail
+              setCurrentSong={setCurrentSong}
+              setSongs={setSongs}
+              setCurrentIndex={setCurrentIndex}
+            />
+          }
+        />
       </Routes>
 
       {!hidePlayerBar && (

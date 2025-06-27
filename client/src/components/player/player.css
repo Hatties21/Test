@@ -184,3 +184,34 @@
   height: 16px;
 }
 
+.volume-control {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.volume-slider {
+  width: 100px;
+  margin-left: 10px;
+  transform-origin: right center;
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Thêm media query cho mobile nếu cần */
+@media (max-width: 768px) {
+  .volume-slider {
+    width: 80px;
+  }
+}
+
