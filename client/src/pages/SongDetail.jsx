@@ -146,6 +146,7 @@ const SongDetail = ({ setCurrentSong }) => {
           ))}
         </Box>
       </Box>
+      <Box sx={{ height: "80px" }} />
     </Box>
   );
 };
