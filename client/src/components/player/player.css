@@ -134,8 +134,8 @@
 }
 
 .progress-bar::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
+  width: 0px;
+  height: 0px;
   border-radius: 50%;
   background-color: #1db954;
   cursor: pointer;
