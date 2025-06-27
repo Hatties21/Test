@@ -1,0 +1,51 @@
+[{
+  "_id": {
+    "$oid": "685ae5e60d0d6af00ec69562"
+  },
+  "title": "1",
+  "artist": "2",
+  "username": "guest",
+  "type": "3",
+  "description": "nothing",
+  "createdAt": {
+    "$date": "2025-06-24T17:52:38.268Z"
+  },
+  "imageUrl": "/uploads/images/BG-1750787558135.png",
+  "audioUrl": "/uploads/audios/_Má»C Háº  SÆ  DÆ¯Æ NG - æ²å¤åé³ - æ².-1750787558186.mp3",
+  "duration": 190,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685ae8d20d0d6af00ec6956a"
+  },
+  "title": "lol",
+  "artist": "yu",
+  "username": "Hatties",
+  "type": "1",
+  "description": "Tuoi lon",
+  "createdAt": {
+    "$date": "2025-06-24T18:05:06.606Z"
+  },
+  "imageUrl": "/uploads/images/Bg2-1750788306550.jpg",
+  "audioUrl": "/uploads/audios/æè¶ä¼ - Tiá»c TrÃ  Sao-ç°æ¾ - Nháº¡c Douyin-1750788306569.mp3",
+  "duration": 123,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685aed18277f2f001fc27ccd"
+  },
+  "title": "shiettt",
+  "artist": "me",
+  "username": "Hatties",
+  "type": "1",
+  "description": "ditmecuocdoi",
+  "createdAt": {
+    "$date": "2025-06-24T18:23:20.101Z"
+  },
+  "imageUrl": "/uploads/images/shiettt.png",
+  "audioUrl": "/uploads/audios/shiettt.mp3",
+  "duration": 123,
+  "__v": 0
+}]
