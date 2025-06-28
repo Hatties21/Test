@@ -1,2 +1,1 @@
-npm install react-slick slick-carousel
-npm install framer-motion
+1
