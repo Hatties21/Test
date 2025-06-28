@@ -224,14 +224,8 @@ const Home = ({ setCurrentSong }) => {
       </Box>
 
       <AddSongButton onSongAdded={handleSongAdded} />
+      
       <Box sx={{ height: "50px" }} /> {/* chừa chỗ cho PlayerBar */}
-      // thêm footer hoặc các thành phần khác nếu cần
-      <Box sx={{ height: "80px" }} /> {/* chừa chỗ cho PlayerBar */}
-      <Box sx={{ position: "fixed", bottom: 0, width: "100%", textAlign: "center", padding: 2 }}>
-        <Typography variant="body2" color="text.secondary">
-          © 2023 My Music App
-        </Typography>
-      </>  
     </Box>
   );
 };
