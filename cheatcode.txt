@@ -1,5 +1,0 @@
-mongoimport \                                                              --db musicapp \                        
-  --collection songs \
-  --file /home/hatties/Test/musicapp.songs.json \
-  --jsonArray \
-

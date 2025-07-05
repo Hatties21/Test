@@ -1,0 +1,75 @@
+project-root/
+├── client/                          # Frontend React app
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── api/
+│   │   │   ├── apiClient.js
+│   │   │   ├── songApi.js
+│   │   │   └── index.js            # barrel exports apiClient & songApi
+│   │   │
+│   │   ├── services/
+│   │   │   ├── songService.js
+│   │   │   └── index.js            # barrel exports songService
+│   │   │
+│   │   ├── hooks/
+│   │   │   ├── useHomeSongs.js
+│   │   │   └── index.js            # barrel exports useHomeSongs
+│   │   │
+│   │   ├── components/
+│   │   │   ├── home/
+│   │   │   │   ├── SongSlider.jsx
+│   │   │   │   ├── SongList.jsx
+│   │   │   │   └── index.js        # barrel exports SongSlider & SongList
+│   │   │   │
+│   │   │   └── ui/
+│   │   │       ├── AddSongButton.jsx
+│   │   │       ├── SongCard.jsx
+│   │   │       └── index.js        # barrel exports UI components
+│   │   │
+│   │   ├── pages/
+│   │   │   └── Home.jsx
+│   │   │
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   └── icons/
+│   │   │
+│   │   ├── styles/
+│   │   │   ├── globals.css
+│   │   │   └── variables.css
+│   │   │
+│   │   ├── App.jsx
+│   │   └── index.jsx
+│   │
+│   ├── .env
+│   └── package.json
+│
+├── server/                          # Backend Node/Express app
+│   ├── config/
+│   │   └── db.js                    # kết nối MongoDB
+│   │
+│   ├── models/
+│   │   ├── Song.js
+│   │   ├── User.js
+│   │   └── Like.js
+│   │
+│   ├── controllers/
+│   │   ├── songController.js
+│   │   ├── authController.js
+│   │   └── likeController.js
+│   │
+│   ├── routes/
+│   │   ├── index.js                 # import & dùng tất cả routers
+│   │   ├── songs.js
+│   │   ├── auth.js
+│   │   └── likes.js
+│   │
+│   ├── uploads/                     # lưu images & audios do multer ghi ra
+│   │
+│   ├── app.js                       # tạo Express app, gắn middleware + routes
+│   ├── server.js                    # load env, connect DB, app.listen()
+│   ├── .env
+│   └── package.json
+│
+├── README.md
+└── package.json                     # nếu dùng monorepo, hoặc chỉ root metadata
