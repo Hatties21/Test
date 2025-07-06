@@ -30,7 +30,8 @@ export const createSong = async (req, res) => {
     const newSong = await Song.create({
       title, artist, username, type,
       description: description || "",
-      imageUrl, audioUrl, duration
+      imageUrl, audioUrl, duration,
+      likedBy: [], // Khởi tạo mảng likedBy rỗng
     });
 
     res.status(201).json(newSong);
@@ -50,12 +51,21 @@ export const getSongs = async (req, res) => {
       Song.find()
           .sort({ createdAt: -1 })
           .skip(skip)
-          .limit(limit),
+          .limit(limit)
+          .populate('likedBy', 'username'), // Populate để lấy thông tin user (tùy chọn)
       Song.countDocuments()
     ]);
 
+    // Thêm số lượt thích và trạng thái liked cho user hiện tại
+    const userId = req.user?.id; // Lấy từ middleware xác thực
+    const songsWithLikes = songs.map(song => ({
+      ...song._doc,
+      likesCount: song.likedBy.length,
+      isLiked: userId ? song.likedBy.includes(userId) : false,
+    }));
+
     res.json({
-      songs,
+      songs: songsWithLikes,
       totalPages: Math.ceil(total / limit),
       currentPage: page
     });
@@ -67,11 +77,85 @@ export const getSongs = async (req, res) => {
 
 export const getSongById = async (req, res) => {
   try {
-    const song = await Song.findById(req.params.id);
+    const song = await Song.findById(req.params.id).populate('likedBy', 'username');
     if (!song) return res.status(404).json({ message: 'Không tìm thấy bài hát' });
-    res.json(song);
+
+    const userId = req.user?.id;
+    res.json({
+      ...song._doc,
+      likesCount: song.likedBy.length,
+      isLiked: userId ? song.likedBy.includes(userId) : false,
+    });
   } catch (err) {
     console.error('❌ Lỗi khi lấy bài hát:', err);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+export const likeSong = async (req, res) => {
+  try {
+    const song = await Song.findById(req.params.id);
+    if (!song) return res.status(404).json({ message: 'Không tìm thấy bài hát' });
+
+    const userId = req.user.id; // Lấy từ middleware xác thực
+    if (song.likedBy.includes(userId)) {
+      return res.status(400).json({ message: 'Bài hát đã được thích' });
+    }
+
+    song.likedBy.push(userId);
+    await song.save();
+
+    res.json({
+      ...song._doc,
+      likesCount: song.likedBy.length,
+      isLiked: true,
+    });
+  } catch (err) {
+    console.error('❌ Lỗi khi thích bài hát:', err);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+export const unlikeSong = async (req, res) => {
+  try {
+    const song = await Song.findById(req.params.id);
+    if (!song) return res.status(404).json({ message: 'Không tìm thấy bài hát' });
+
+    const userId = req.user.id;
+    if (!song.likedBy.includes(userId)) {
+      return res.status(400).json({ message: 'Bài hát chưa được thích' });
+    }
+
+    song.likedBy = song.likedBy.filter(id => id.toString() !== userId);
+    await song.save();
+
+    res.json({
+      ...song._doc,
+      likesCount: song.likedBy.length,
+      isLiked: false,
+    });
+  } catch (err) {
+    console.error('❌ Lỗi khi bỏ thích bài hát:', err);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+export const getUserLikedSongs = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const songs = await Song.find({ likedBy: userId })
+      .sort({ createdAt: -1 })
+      .populate('likedBy', 'username');
+
+    const songsWithLikes = songs.map(song => ({
+      ...song._doc,
+      likesCount: song.likedBy.length,
+      isLiked: true,
+    }));
+
+    res.json(songsWithLikes);
+  } catch (err) {
+    console.error('❌ Lỗi khi lấy danh sách bài hát yêu thích:', err);
     res.status(500).json({ message: 'Lỗi server' });
   }
 };

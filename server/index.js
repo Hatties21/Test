@@ -1,4 +1,3 @@
-// server/index.js
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -21,6 +20,17 @@ app.use('/api/auth', authRoutes);
 
 // Route: songs
 app.use('/api/songs', songRoutes);
+
+// Xử lý lỗi 404
+app.use((req, res) => {
+  res.status(404).json({ message: 'Không tìm thấy route' });
+});
+
+// Xử lý lỗi chung
+app.use((err, req, res, next) => {
+  console.error('❌ Lỗi server:', err);
+  res.status(500).json({ message: 'Lỗi server' });
+});
 
 // Kết nối MongoDB
 mongoose.connect(process.env.MONGO_URI, {

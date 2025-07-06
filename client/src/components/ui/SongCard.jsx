@@ -1,26 +1,66 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+// File: client/src/components/ui/SongCard.jsx
+
+import React from "react";
+import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
 
 const SongCard = ({ song, onClick }) => {
   return (
-    <Box sx={{ textAlign: 'center', cursor: onClick ? 'pointer' : 'default' }} onClick={onClick}>
-      <Box
-        component="img"
-        src={song.imageUrl}
-        alt={song.title}
+    <Card
+      onClick={onClick}
+      sx={{
+        width: 300,
+        height: 280,
+        cursor: onClick ? "pointer" : "default",
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: 2,
+        overflow: "hidden",
+        boxShadow: 3,
+        "&:hover": { boxShadow: 6 },
+      }}
+    >
+      {/* Phần ảnh chiếm 70% chiều cao */}
+      <Box sx={{ flex: "0 0 70%" }}>
+        <CardMedia
+          component="img"
+          image={song.imageUrl}
+          alt={song.title}
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+      </Box>
+
+      {/* Phần nội dung chiếm 30% chiều cao */}
+      <CardContent
         sx={{
-          width: 180,
-          height: 180,
-          borderRadius: 2,
-          objectFit: 'cover',
-          boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-          marginBottom: 1,
+          flex: "1 1 30%",
+          p: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "left",
+          textAlign: "left",
+          bgcolor: "background.paper",
         }}
-      />
-      <Typography variant="body2" sx={{ fontSize: '14px', wordBreak: 'break-word' }}>
-        {song.title}
-      </Typography>
-    </Box>
+      >
+        <Typography
+          variant="subtitle1"
+          noWrap
+          sx={{ fontWeight: "bold", mb: 1 }}
+        >
+          {song.title}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          noWrap
+        >
+          {song.artist}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
 

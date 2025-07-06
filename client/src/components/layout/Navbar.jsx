@@ -38,7 +38,8 @@ const Navbar = ({ isLoggedIn, user, setIsLoggedIn, setUser }) => {
     setIsLoggedIn(false);
     setUser(null);
     setAnchorEl(null);
-    navigate("/");
+    navigate("/login");
+    window.location.reload();
   };
 
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);

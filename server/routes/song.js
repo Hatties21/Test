@@ -1,13 +1,32 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
+import jwt from 'jsonwebtoken';
 import {
   createSong,
   getSongs,
   getSongById,
+  likeSong,
+  unlikeSong,
+  getUserLikedSongs,
 } from '../controllers/songController.js';
 
 const router = express.Router();
+
+// Middleware xác thực JWT
+const authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Chưa đăng nhập' });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Lưu thông tin user vào req
+    next();
+  } catch (err) {
+    console.error('JWT verification error:', err);
+    return res.status(401).json({ message: 'Token không hợp lệ' });
+  }
+};
 
 // Multer config
 const storage = multer.diskStorage({
@@ -29,6 +48,7 @@ const upload = multer({ storage });
 // Routes
 router.post(
   '/', 
+  authMiddleware, // Yêu cầu đăng nhập để tạo bài hát
   upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'audio', maxCount: 1 }
@@ -36,7 +56,10 @@ router.post(
   createSong
 );
 
-router.get('/',       getSongs);
-router.get('/:id',    getSongById);
+router.get('/', authMiddleware, getSongs); // Thêm auth để lấy isLiked
+router.get('/liked', authMiddleware, getUserLikedSongs); // Lấy danh sách yêu thích
+router.get('/:id', authMiddleware, getSongById);
+router.post('/:id/like', authMiddleware, likeSong);
+router.delete('/:id/like', authMiddleware, unlikeSong);
 
 export default router;

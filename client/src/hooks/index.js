@@ -1,3 +1,4 @@
 import useHomeSongs from './useHomeSongs';
+import useSongDetail from './useSongDetail';
 
-export { useHomeSongs };
+export { useHomeSongs, useSongDetail };

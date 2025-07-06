@@ -19,8 +19,9 @@ const SongList = ({ songs, onSongClick }) => (
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: "repeat(5, 180px)",
-        gap: 8,
+        gridTemplateColumns: "repeat(5, 300px)",
+        columnGap: "20px",
+        rowGap: "20px",
         justifyContent: "center",
       }}
     >
