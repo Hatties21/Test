@@ -10,24 +10,63 @@ import {
   MenuItem,
   styled,
   InputBase,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo.jpg";
 import SearchIcon from "@mui/icons-material/Search";
+import { songApi } from "../../api";
+import { useDebounce } from "use-debounce";
+import { useSongDetail } from "../../hooks";
 
-const Navbar = ({ isLoggedIn, user, setIsLoggedIn, setUser }) => {
+const Navbar = ({ isLoggedIn, user, setIsLoggedIn, setUser, setCurrentSong}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
+  const {song} = useSongDetail(setCurrentSong);
+
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (debouncedSearchQuery.trim()) {
+        try {
+          const response = await songApi.searchSongs(debouncedSearchQuery);
+          setSearchResults(response.data);
+        } catch (err) {
+          console.error("Lỗi khi tìm kiếm:", err);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    };
+    fetchSearchResults();
+  }, [debouncedSearchQuery]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setSearchQuery("");
+      setSearchResults([]);
     }
+  };
+
+  const handleSongSelect = (song) => {
+    if (!song?._id) return;
+
+    // 1. Cập nhật bài hát hiện tại (nếu cần)
+    setCurrentSong(song)
+
+    // 2. Chuyển hướng đến SongDetail
+    navigate(`/song/${song._id}`);
+
+    // 3. Reset thanh tìm kiếm
+    setSearchQuery("");
+    setSearchResults([]);
   };
 
   const handleLogin = () => navigate("/login");
@@ -161,20 +200,75 @@ const Navbar = ({ isLoggedIn, user, setIsLoggedIn, setUser }) => {
             py: 0.5,
             ml: 1,
             mr: 4,
-            flexGrow: 0.4,
           }}
         >
           <SearchIcon sx={{ color: "text.secondary", mr: 1 }} />
-          <InputBase
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+          <Autocomplete
+            freeSolo
+            options={searchResults}
+            getOptionLabel={(option) => `${option.title} - ${option.artist}`}
+            onInputChange={(event, newInputValue) =>
+              setSearchQuery(newInputValue)
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Search..."
+                variant="standard"
+                sx={{
+                  width: "300px",
+                  "& .MuiInputBase-input": { py: 1 },
+                  "&:hover": { backgroundColor: "transparent" },
+                }}
+              />
+            )}
+            renderOption={(props, option) => (
+              <Box
+                component="li"
+                {...props}
+                onClick={() => handleSongSelect(option)}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  py: 1,
+                }}
+              >
+                <img
+                  src={option.imageUrl}
+                  alt={option.title}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 4,
+                    objectFit: "cover",
+                  }}
+                />
+                <Box>
+                  <Typography variant="body1" fontWeight={600}>
+                    {option.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {option.artist}
+                  </Typography>
+                </Box>
+              </Box>
+            )}
+            onChange={(event, value) => {
+              if (value) {
+                navigate(`/songs/${value._id}`);
+                setSearchQuery("");
+                setSearchResults([]);
+              }
+            }}
             sx={{
-              color: "inherit",
-              width: "100%",
-              "& .MuiInputBase-input": { py: 1, width: "100%" },
-              "&.Mui-focused": { outline: "none", boxShadow: "none" },
-              "&:hover": { backgroundColor: "transparent" },
+              "& .MuiAutocomplete-listbox": {
+                maxHeight: 300,
+              },
+              "& .MuiAutocomplete-option": {
+                px: 2,
+                py: 1.5,
+              },
             }}
           />
         </Box>

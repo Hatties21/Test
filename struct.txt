@@ -45,8 +45,6 @@ project-root/
 │   └── package.json
 │
 ├── server/                          # Backend Node/Express app
-│   ├── config/
-│   │   └── db.js                    # kết nối MongoDB
 │   │
 │   ├── models/
 │   │   ├── Song.js

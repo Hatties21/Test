@@ -187,30 +187,30 @@ const PlayerBar = ({ currentSong, setCurrentSong }) => {
 
   // Gọi API like/unlike rồi fetch lại danh sách likedSongs
   const toggleLike = async () => {
-    if (!token || !currentSong) return;
-    try {
-      const method = isLiked ? "delete" : "post";
-      await axios({
-        method,
-        url: `/api/songs/${currentSong._id}/like`,
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      // fetch lại danh sách likedSongs
-      const { data } = await axios.get("/api/songs/liked", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setLikedSongs(data);
+  if (!token || !currentSong) return;
+  try {
+    const method = isLiked ? "delete" : "post";
+    await axios({
+      method,
+      url: `/api/songs/${currentSong._id}/like`,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    // Fetch lại danh sách likedSongs
+    const { data } = await axios.get("/api/songs/liked", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setLikedSongs(data);
 
-      // Cập nhật ngay likesCount và isLiked của currentSong để UI phản hồi tức thì
-      setCurrentSong({
-        ...currentSong,
-        likesCount: currentSong.likesCount + (isLiked ? -1 : 1),
-        isLiked: !isLiked,
-      });
-    } catch (err) {
-      console.error("❌ Lỗi khi cập nhật lượt thích:", err);
-    }
-  };
+    // Chỉ cập nhật isLiked và likesCount, không gọi setCurrentSong
+    setIsLiked(!isLiked);
+    setCurrentSong((prev) => ({
+      ...prev,
+      likesCount: prev.likesCount + (isLiked ? -1 : 1),
+    }));
+  } catch (err) {
+    console.error("❌ Lỗi khi cập nhật lượt thích:", err);
+  }
+};
 
   if (!currentSong) return null;
   const loopIconToShow =

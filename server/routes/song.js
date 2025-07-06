@@ -9,6 +9,7 @@ import {
   likeSong,
   unlikeSong,
   getUserLikedSongs,
+  searchSongs
 } from '../controllers/songController.js';
 
 const router = express.Router();
@@ -58,6 +59,7 @@ router.post(
 
 router.get('/', authMiddleware, getSongs); // Thêm auth để lấy isLiked
 router.get('/liked', authMiddleware, getUserLikedSongs); // Lấy danh sách yêu thích
+router.get('/search', authMiddleware, searchSongs);
 router.get('/:id', authMiddleware, getSongById);
 router.post('/:id/like', authMiddleware, likeSong);
 router.delete('/:id/like', authMiddleware, unlikeSong);

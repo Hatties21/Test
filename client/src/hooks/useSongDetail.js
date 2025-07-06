@@ -38,6 +38,7 @@ const useSongDetail = (setCurrentSong) => {
     navigate(`/song/${s._id}`);
   };
 
+
   return { song, randomSongs, loading, handleRandomClick };
 };
 

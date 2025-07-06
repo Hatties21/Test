@@ -9,6 +9,9 @@ const songApi = {
   unlikeSong: (songId) => apiClient.post(`/songs/${songId}/unlike`),
   getLikedSongs: () => apiClient.get("/songs/liked"),
   isLiked: (songId) => apiClient.get(`/songs/${songId}/isLiked`),
+  searchSongs: async (query) => {
+    return await apiClient.get(`/songs/search?q=${encodeURIComponent(query)}`);
+  },
 };
 
 export default songApi;

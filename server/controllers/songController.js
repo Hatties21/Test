@@ -159,3 +159,24 @@ export const getUserLikedSongs = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server' });
   }
 };
+
+export const searchSongs = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const query = q
+      ? {
+          $or: [
+            { title: { $regex: q, $options: 'i' } },
+            { artist: { $regex: q, $options: 'i' } },
+          ],
+        }
+      : {};
+    const songs = await Song.find(query)
+      .limit(10) // Giới hạn 10 gợi ý
+      .select('_id title artist audioUrl imageUrl likedCount');
+    res.json(songs);
+  } catch (err) {
+    console.error('❌ Lỗi khi tìm kiếm bài hát:', err);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};

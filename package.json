@@ -33,6 +33,7 @@
     "mongoose": "^8.16.0",
     "multer": "^2.0.1",
     "music-metadata": "^11.3.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "use-debounce": "^10.0.5"
   }
 }
