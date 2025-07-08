@@ -1,31 +1,44 @@
-// server/index.js
 import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-import { connect } from 'mongoose';
-import authRoutes from './routes/auth.js';  // nhớ thêm .js ở cuối
+import mongoose from 'mongoose';
+
+import authRoutes from './routes/auth.js';
 import songRoutes from './routes/song.js';
 
 const app = express();
 
-// Middleware
+// Middleware chung
 app.use(cors());
 app.use(express.json());
-app.use('/api/songs', songRoutes);
 app.use('/uploads', express.static('uploads'));
 
+// Route: auth trước
+app.use('/api/auth', authRoutes);
+
+// Route: songs
+app.use('/api/songs', songRoutes);
+
+// Xử lý lỗi 404
+app.use((req, res) => {
+  res.status(404).json({ message: 'Không tìm thấy route' });
+});
+
+// Xử lý lỗi chung
+app.use((err, req, res, next) => {
+  console.error('❌ Lỗi server:', err);
+  res.status(500).json({ message: 'Lỗi server' });
+});
+
 // Kết nối MongoDB
-connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
-
-// Đăng ký route
-app.use('/api/auth', authRoutes);
 
 // Khởi chạy server
 const PORT = process.env.PORT || 5000;

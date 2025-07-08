@@ -1,4 +1,3 @@
-// ===== FILE: client/src/components/ui/AddSongButton.jsx =====
 import React, { useState } from "react";
 import axios from "axios";
 import styles from "./AddSongButton.module.css";
@@ -44,17 +43,27 @@ const AddSongButton = ({ onSongAdded }) => {
       formData.append("audio", audioFile);
       formData.append("username", userInfo.name || "guest");
 
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      if (!token) {
+        throw new Error("Vui lòng đăng nhập để thêm bài hát");
+      }
+
       const res = await axios.post("/api/songs", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // Thêm token xác thực
+        },
       });
 
       onSongAdded?.(res.data);
-      setForm({ title: "", artist: "", type: "" });
+      setForm({ title: "", artist: "", type: "", description: "" });
       setImageFile(null);
       setAudioFile(null);
       setShowModal(false);
+      setError("");
     } catch (err) {
-      setError("Lỗi khi thêm bài hát");
+      setError(err.response?.data?.message || err.message || "Lỗi khi thêm bài hát");
+      console.error("❌ Lỗi khi thêm bài hát:", err);
     } finally {
       setLoading(false);
     }

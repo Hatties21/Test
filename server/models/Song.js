@@ -1,4 +1,3 @@
-// ===== FILE: server/models/Song.js =====
 import { Schema, model } from 'mongoose';
 
 const SongSchema = new Schema({
@@ -11,9 +10,9 @@ const SongSchema = new Schema({
   imageUrl:  { type: String, required: true },
   audioUrl:  { type: String, required: true },
   duration:  { type: Number, required: true },
+  likedBy:   [{ type: Schema.Types.ObjectId, ref: 'User' }], // Thêm trường likedBy
+}, {
+  indexes: [{ key: { likedBy: 1 } }], // Tạo index cho likedBy để tối ưu query
 });
 
 export default model('Song', SongSchema);
-
-
-// ===== FILE: server/routes/song.js =====

@@ -53,6 +53,7 @@ const AppContent = () => {
         user={user}
         setIsLoggedIn={setIsLoggedIn}
         setUser={setUser}
+        setCurrentSong={setCurrentSong}
       />
 
       <Routes>
