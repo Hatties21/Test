@@ -173,7 +173,7 @@ export const searchSongs = async (req, res) => {
       : {};
     const songs = await Song.find(query)
       .limit(10) // Giới hạn 10 gợi ý
-      .select('_id title artist audioUrl imageUrl likedCount');
+      .select('_id title artist audioUrl imageUrl likedBy likesCount isLiked duration ');
     res.json(songs);
   } catch (err) {
     console.error('❌ Lỗi khi tìm kiếm bài hát:', err);

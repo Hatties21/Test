@@ -12,6 +12,7 @@ const songApi = {
   searchSongs: async (query) => {
     return await apiClient.get(`/songs/search?q=${encodeURIComponent(query)}`);
   },
+  getSongById: (songId) => apiClient.get(`/songs/${songId}`),
 };
 
 export default songApi;

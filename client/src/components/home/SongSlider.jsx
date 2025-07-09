@@ -5,8 +5,8 @@ const SubCard = ({ song, direction, onClick }) => (
   <Card
     onClick={onClick}
     sx={{
-      width: "800px",
-      height: "350px",
+      width: "650px",
+      height: "250px",
       opacity: 0.6,
       zIndex: 1,
       transform: direction === "left" ? "translateX(50px)" : "translateX(-50px)",
@@ -14,18 +14,44 @@ const SubCard = ({ song, direction, onClick }) => (
       position: "relative",
       [direction === "left" ? "right" : "left"]: "-50px",
       transition: "all 0.3s ease",
+      overflow: "hidden",
       "&:hover": { 
         opacity: 0.8, 
         transform: direction === "left" ? "translateX(60px)" : "translateX(-60px)" 
       },
     }}
   >
+    {/* Blurred Background */}
+    <Box
+      sx={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundImage: `url(${song?.imageUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        filter: "blur(4px)",
+        zIndex: 0,
+      }}
+    />
+    
+    {/* Main Image */}
     <CardMedia
       component="img"
       image={song?.imageUrl}
       alt={song?.title}
-      sx={{ height: "100%", width: "100%", objectFit: "cover" }}
+      sx={{ 
+        position: "relative",
+        zIndex: 1,
+        height: "100%",
+        width: "100%",
+        objectFit: "contain",
+        objectPosition: "center",
+      }}
     />
+    
     <CardContent
       sx={{
         position: "absolute",
@@ -33,6 +59,7 @@ const SubCard = ({ song, direction, onClick }) => (
         left: 10,
         color: "white",
         textShadow: "1px 1px 3px rgba(0, 0, 0, 0.7)",
+        zIndex: 2,
       }}
     >
       <Typography variant="h5">{song?.title}</Typography>
@@ -45,22 +72,48 @@ const MainCard = ({ song, onClick }) => (
   <Card
     onClick={onClick}
     sx={{
-      width: "1800px",
-      height: "400px",
+      width: "1200px",
+      height: "300px",
       zIndex: 2,
       cursor: "pointer",
       margin: "0 -50px",
       position: "relative",
       transition: "all 0.3s ease",
+      overflow: "hidden",
       "&:hover": { transform: "scale(1.01)" },
     }}
   >
+    {/* Blurred Background */}
+    <Box
+      sx={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundImage: `url(${song?.imageUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        filter: "blur(4px)",
+        zIndex: 0,
+      }}
+    />
+    
+    {/* Main Image */}
     <CardMedia
       component="img"
       image={song?.imageUrl}
       alt={song?.title}
-      sx={{ height: "100%", width: "100%", objectFit: "cover" }}
+      sx={{ 
+        position: "relative",
+        zIndex: 1,
+        height: "100%",
+        width: "100%",
+        objectFit: "contain",
+        objectPosition: "center",
+      }}
     />
+    
     <CardContent
       sx={{
         position: "absolute",
@@ -68,6 +121,7 @@ const MainCard = ({ song, onClick }) => (
         left: 10,
         color: "white",
         textShadow: "1px 1px 3px rgba(0, 0, 0, 0.7)",
+        zIndex: 2,
         width: "calc(100% - 20px)",
       }}
     >

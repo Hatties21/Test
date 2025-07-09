@@ -35,6 +35,8 @@ const Home = ({ setCurrentSong }) => {
         alignItems: "center",
         padding: 3,
         width: "100%",
+        position: "relative",
+        marginTop: "-35px",
       }}
     >
       {!loading && songs.length > 0 && (
@@ -45,12 +47,17 @@ const Home = ({ setCurrentSong }) => {
           onSubClick={handleSubCardClick}
         />
       )}
+      
 
-      <SongList songs={songs} onSongClick={handleSongClick} />
+      <Box sx={{ width: "65%", alignSelf: "flex-start", marginLeft: "80px" }}>
+        <SongList songs={songs} onSongClick={handleSongClick} />
+      </Box>
+      
+      
 
       <AddSongButton onSongAdded={handleSongAdded} />
       
-      <Box sx={{ height: "50px" }} />
+      <Box sx={{ height: "90px" }} />
     </Box>
   );
 };

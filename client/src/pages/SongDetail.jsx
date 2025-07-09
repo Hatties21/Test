@@ -13,7 +13,7 @@ const SongDetail = ({ setCurrentSong }) => {
   if (!song) return <div>Không tìm thấy bài hát</div>;
 
   return (
-    <Box sx={{ position: "relative", p: 4 }}>
+    <Box sx={{ position: "relative", p: 4, marginTop: "-35px" }}>
       <Box display="flex" gap={4}>
         <Box position="relative" width="250px" textAlign="left">
           <Avatar
@@ -72,6 +72,7 @@ const SongDetail = ({ setCurrentSong }) => {
           boxShadow: 3,
           borderRadius: 2,
           zIndex: 1000,
+          marginTop: "-35px",
         }}
       >
         <Typography
@@ -82,7 +83,7 @@ const SongDetail = ({ setCurrentSong }) => {
           Có thể bạn quan tâm
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {randomSongs.map((s) => (
+          {randomSongs.slice(0,2).map((s) => (
             <SongCard
               key={s._id}
               song={s}
