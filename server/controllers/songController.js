@@ -180,3 +180,23 @@ export const searchSongs = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server' });
   }
 };
+
+export const getRandomSong = async (req, res) => {
+  try {
+    // Lấy ngẫu nhiên 1 bản ghi trong collection Song
+    const [song] = await Song.aggregate([{ $sample: { size: 1 } }]);
+    if (!song) {
+      return res.status(404).json({ message: 'Không tìm thấy bài hát nào' });
+    }
+    const userId = req.user?.id;
+    // Trả về thêm số lượt like và trạng thái của user
+    res.json({
+      ...song,
+      likesCount: song.likedBy.length,
+      isLiked: userId ? song.likedBy.includes(userId) : false
+    });
+  } catch (err) {
+    console.error('❌ Lỗi khi lấy bài hát ngẫu nhiên:', err);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
