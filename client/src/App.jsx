@@ -6,6 +6,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./components/layout/Navbar";
@@ -15,6 +16,7 @@ import Library from "./pages/Library";
 import Album from "./pages/Album";
 import Profile from "./pages/Profile";
 import SongDetail from "./pages/SongDetail";
+import Explore from "./pages/Explore";
 
 // ✅ Tạo theme Material-UI
 const theme = createTheme({
@@ -67,6 +69,19 @@ const AppContent = () => {
             />
           }
         />
+
+        {/* Route Khám phá */}
+        <Route
+          path="/explore"
+          element={
+            <Explore
+              setCurrentSong={setCurrentSong}
+              setSongs={setSongs}
+              setCurrentIndex={setCurrentIndex}
+            />
+          }
+        />
+
         <Route
           path="/login"
           element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />}
