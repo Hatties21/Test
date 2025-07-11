@@ -12,7 +12,6 @@ import Register from "./pages/Register";
 import Navbar from "./components/layout/Navbar";
 import PlayerBar from "./components/player/PlayerBar";
 import Home from "./pages/Home";
-import Library from "./pages/Library";
 import Album from "./pages/Album";
 import Profile from "./pages/Profile";
 import SongDetail from "./pages/SongDetail";
@@ -75,6 +74,9 @@ const AppContent = () => {
           path="/explore"
           element={
             <Explore
+              currentSong={currentSong}
+              songs={songs}
+              currentIndex={currentIndex}
               setCurrentSong={setCurrentSong}
               setSongs={setSongs}
               setCurrentIndex={setCurrentIndex}
@@ -87,8 +89,16 @@ const AppContent = () => {
           element={<Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />}
         />
         <Route path="/register" element={<Register />} />
-        <Route path="/library" element={<Library />} />
-        <Route path="/album" element={<Album />} />
+        <Route
+          path="/album"
+          element={
+            <Album
+              setCurrentSong={setCurrentSong}
+              setSongs={setSongs}
+              setCurrentIndex={setCurrentIndex}
+            />
+          }
+        />
         <Route path="/profile" element={<Profile />} />
         <Route
           path="/song/:id"

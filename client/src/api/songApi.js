@@ -5,6 +5,7 @@ const songApi = {
     apiClient.get('/songs', { params: { page, limit } }),
   addSong: (songData) =>
     apiClient.post('/songs', songData),
+  deleteSong: (songId) => apiClient.delete(`/songs/${songId}`),
   likeSong: (songId) => apiClient.post(`/songs/${songId}/like`),
   unlikeSong: (songId) => apiClient.post(`/songs/${songId}/unlike`),
   getLikedSongs: () => apiClient.get("/songs/liked"),

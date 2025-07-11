@@ -92,6 +92,31 @@ export const getSongById = async (req, res) => {
   }
 };
 
+export const deleteSong = async (req, res) => {
+  try {
+    //  Tìm bài theo id
+    const song = await Song.findById(req.params.id);
+    if (!song) {
+      return res.status(404).json({ message: 'Không tìm thấy bài hát' });
+    }
+
+    //  Xóa file ảnh và audio (tuỳ chọn)
+    const imagePath = path.join('uploads', 'images', path.basename(song.imageUrl));
+    const audioPath = path.join('uploads', 'audios', path.basename(song.audioUrl));
+    [imagePath, audioPath].forEach(filePath => {
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    });
+
+    // Xóa document trong DB
+    await song.deleteOne();
+
+    res.json({ message: 'Xóa bài hát thành công' });
+  } catch (err) {
+    console.error('❌ Lỗi khi xóa bài hát:', err);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
 export const likeSong = async (req, res) => {
   try {
     const song = await Song.findById(req.params.id);
