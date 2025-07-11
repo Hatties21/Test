@@ -34,7 +34,6 @@ const Navbar = ({ isLoggedIn, user, setIsLoggedIn, setUser, setCurrentSong }) =>
   // Navigation items
   const navItems = [
     { label: 'HOME', path: '/' },
-    { label: 'LIBRARY', path: '/library' },
     { label: 'ALBUM', path: '/album' },
     { label: "KHÁM PHÁ",  path: "/explore"  },
   ];

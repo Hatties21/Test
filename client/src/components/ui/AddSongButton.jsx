@@ -41,7 +41,7 @@ const AddSongButton = ({ onSongAdded }) => {
       formData.append("description", form.description || "");
       formData.append("image", imageFile);
       formData.append("audio", audioFile);
-      formData.append("username", userInfo.name || "guest");
+      formData.append("username", userInfo.name || ""); // Thêm tên người dùng nếu có
 
       const token = localStorage.getItem("token"); // Lấy token từ localStorage
       if (!token) {
