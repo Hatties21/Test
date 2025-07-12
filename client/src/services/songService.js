@@ -9,6 +9,11 @@ const songService = {
     const res = await songApi.addSong(songData);
     return res.data;
   },
+  fetchTopSongs: async (limit = 10) => {
+    const res = await songApi.getTopSongs(limit);
+    return res.data;
+  }
 };
 
+export const fetchTopSongs = songService.fetchTopSongs;
 export default songService;

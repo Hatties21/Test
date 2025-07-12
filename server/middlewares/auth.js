@@ -12,7 +12,7 @@ export default async function auth(req, res, next) {
     const user = await User.findById(payload.id);
     if (!user) return res.status(401).json({ message: 'Người dùng không tồn tại' });
 
-    req.user = { id: user._id, username: user.username };
+    req.user = { id: user._id, name: user.name, email: user.email };
     next();
   } catch (err) {
     console.error('Auth middleware error:', err);

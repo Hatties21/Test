@@ -36,6 +36,7 @@ const Navbar = ({ isLoggedIn, user, setIsLoggedIn, setUser, setCurrentSong }) =>
     { label: 'HOME', path: '/' },
     { label: 'ALBUM', path: '/album' },
     { label: "KHÁM PHÁ",  path: "/explore"  },
+    { label: 'TOP', path: '/top' },
   ];
 
   // Custom styled button

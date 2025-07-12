@@ -16,6 +16,7 @@ import Album from "./pages/Album";
 import Profile from "./pages/Profile";
 import SongDetail from "./pages/SongDetail";
 import Explore from "./pages/Explore";
+import Top from "./pages/Top"; // Import Top page
 
 // ✅ Tạo theme Material-UI
 const theme = createTheme({
@@ -77,6 +78,17 @@ const AppContent = () => {
               currentSong={currentSong}
               songs={songs}
               currentIndex={currentIndex}
+              setCurrentSong={setCurrentSong}
+              setSongs={setSongs}
+              setCurrentIndex={setCurrentIndex}
+            />
+          }
+        />
+
+        <Route
+          path="/top"
+          element={
+            <Top
               setCurrentSong={setCurrentSong}
               setSongs={setSongs}
               setCurrentIndex={setCurrentIndex}

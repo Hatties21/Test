@@ -225,3 +225,29 @@ export const getRandomSong = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server' });
   }
 };
+
+export const getTopSongs = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    // Dùng aggregate để đếm kích thước mảng likedBy
+    const top = await Song.aggregate([
+      {
+        $project: {
+          title: 1,
+          artist: 1,
+          username: 1,
+          imageUrl: 1,
+          audioUrl: 1,
+          duration: 1,
+          likesCount: { $size: '$likedBy' }
+        }
+      },
+      { $sort: { likesCount: -1 } },
+      { $limit: limit }
+    ]);
+    res.json(top);
+  } catch (err) {
+    console.error('❌ Lỗi khi lấy top songs:', err);
+    res.status(500).json({ error: 'Lỗi server' });
+  }
+};

@@ -15,6 +15,8 @@ const songApi = {
   },
   getSongById: (songId) => apiClient.get(`/songs/${songId}`),
   getRandomSong: () => apiClient.get('/songs/random'),
+  getTopSongs: (limit = 10) =>
+    apiClient.get('/songs/top', { params: { limit } }),
 };
 
 export default songApi;

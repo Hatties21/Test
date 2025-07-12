@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
 
 const SongCard = ({ song, onClick }) => {
+  
   return (
     <Card
       onClick={onClick}

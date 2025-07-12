@@ -12,6 +12,7 @@ import {
   getUserLikedSongs,
   getRandomSong,
   searchSongs,
+  getTopSongs
 } from "../controllers/songController.js";
 
 const router = express.Router();
@@ -65,6 +66,7 @@ router.get("/", authMiddleware, getSongs); // Thêm auth để lấy isLiked
 router.get("/liked", authMiddleware, getUserLikedSongs); // Lấy danh sách yêu thích
 router.get("/search", authMiddleware, searchSongs);
 router.get("/random", authMiddleware, getRandomSong);
+router.get('/top', getTopSongs);
 router.delete("/:id",authMiddleware, deleteSong); // Xóa bài hát, yêu cầu đăng nhập);
 router.get("/:id", authMiddleware, getSongById);
 router.post("/:id/like", authMiddleware, likeSong);
