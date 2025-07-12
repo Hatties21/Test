@@ -1,0 +1,222 @@
+1. Thêm bài hát mới (Create)
+Method: POST
+
+URL: http://localhost:5000/api/songs
+
+Headers:
+
+Authorization: Bearer <token>
+
+Content-Type: multipart/form-data
+
+Body (form-data):
+
+Key	Type	Ví dụ
+title	Text	“Tên bài”
+artist	Text	“Tên nghệ sĩ”
+username	Text	“nguyen_viet_toan”
+type	Text	“pop”, “rock”, …
+description	Text	“Mô tả ngắn (không bắt buộc)”
+image	File	Chọn file ảnh (jpg/png)
+audio	File	Chọn file audio (mp3/…)
+
+Chú ý: Controller hiện tại (createSong trong src/controllers/songController.js) yêu cầu phải upload image và audio qua multer; nếu bạn chỉ gửi JSON thì sẽ bị lỗi thiếu file.
+
+2. Lấy danh sách bài hát (Read – list)
+Method: GET
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs?page=1&limit=25
+page và limit tuỳ chọn, mặc định page=1, limit=25
+
+Headers:
+
+Authorization: Bearer <token>
+
+Response trả về:
+
+json
+Copy
+Edit
+{
+  "songs": [ /* mảng các object song */ ],
+  "totalPages": 10,
+  "currentPage": 1
+}
+3. Lấy chi tiết 1 bài hát (Read – detail)
+Method: GET
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/{songId}
+Headers:
+
+Authorization: Bearer <token>
+
+4. Thích bài hát (Like)
+Method: POST
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/{songId}/like
+Headers:
+
+Authorization: Bearer <token>
+
+5. Bỏ thích bài hát (Unlike)
+Method: DELETE
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/{songId}/like
+Headers:
+
+Authorization: Bearer <token>
+
+6. Lấy danh sách bài hát đã thích của user (Read – liked)
+Method: GET
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/liked
+Headers:
+
+Authorization: Bearer <token>
+
+7. Tìm kiếm bài hát (Search)
+Method: GET
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/search?q=tu-khoa
+Headers:
+
+Authorization: Bearer <token>
+
+8. Lấy 1 bài hát ngẫu nhiên (Random)
+Method: GET
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/random
+Headers:
+
+Authorization: Bearer <token>
+
+📌 Trả về một bài hát bất kỳ từ MongoDB bằng aggregate([ { $sample: { size: 1 } } ]).
+
+9. Cập nhật bài hát (Update) ✅ (nếu bạn đã triển khai)
+Method: PUT
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/{songId}
+Headers:
+
+Authorization: Bearer <token>
+
+Content-Type: multipart/form-data (nếu update cả ảnh/audio)
+
+Body (form-data):
+
+Key	Type	Ghi chú
+title	Text	Tuỳ chọn
+artist	Text	Tuỳ chọn
+image	File	Tuỳ chọn
+audio	File	Tuỳ chọn
+
+📌 Trong controller updateSong, bạn có thể sử dụng Song.findByIdAndUpdate(id, updateData, { new: true }).
+
+10. Xoá bài hát (Delete) ✅ (nếu bạn đã triển khai)
+Method: DELETE
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/{songId}
+Headers:
+
+Authorization: Bearer <token>
+
+📌 Trong controller deleteSong, bạn có thể sử dụng Song.findByIdAndDelete(id).
+
+11. Lọc bài hát theo thể loại (type)
+Method: GET
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/type/{type}
+VD: /api/songs/type/pop, /type/ballad
+
+Headers:
+
+Authorization: Bearer <token>
+
+📌 Trả về danh sách các bài hát có type = {type}.
+
+12. Lấy danh sách bài hát của một người dùng cụ thể
+Method: GET
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/user/{username}
+VD: /api/songs/user/nguyen_viet_toan
+
+Headers:
+
+Authorization: Bearer <token>
+
+📌 Trả về tất cả bài hát do người dùng đó đăng.
+
+13. Lấy số lượt thích của 1 bài hát
+Method: GET
+
+URL:
+
+bash
+Copy
+Edit
+http://localhost:5000/api/songs/{songId}/likes
+Headers:
+
+Authorization: Bearer <token>
+
+📌 Controller sẽ đếm likedBy.length và trả về:
+
+json
+Copy
+Edit
+{ "likes": 12 }
