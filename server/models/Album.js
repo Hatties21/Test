@@ -8,7 +8,8 @@ const AlbumSchema = new Schema({
   },
   artist: {
     type: String,
-    required: true
+    required: false,
+    default: ''
   },
   uploader: {
     type: Schema.Types.ObjectId,
